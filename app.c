@@ -48,62 +48,7 @@
 #include <DHT.h>
 
 
-#define BSP_TXPORT gpioPortA
-#define BSP_RXPORT gpioPortA
-#define BSP_TXPIN 5
-#define BSP_RXPIN 6
-#define BSP_ENABLE_PORT gpioPortD
-#define BSP_ENABLE_PIN 4
 
-#define BSP_GPIO_LEDS
-#define BSP_GPIO_LED0_PORT gpioPortD
-#define BSP_GPIO_LED0_PIN 2
-#define BSP_GPIO_LED1_PORT gpioPortD
-#define BSP_GPIO_LED1_PIN 3
-#define BSP_GPIO_PB0_PORT gpioPortB
-#define BSP_GPIO_PB0_PIN 0
-#define BSP_GPIO_PB1_PORT gpioPortB
-#define BSP_GPIO_PB1_PIN 1
-uint32_t flag=0;
-void initLED_BUTTON(){
-  // Enable GPIO clock
-  CMU_ClockEnable(cmuClock_GPIO, true);
-
-  // Configure PB0 and PB1 as input with glitch filter enabled
-  GPIO_PinModeSet(BSP_GPIO_PB0_PORT, BSP_GPIO_PB0_PIN, gpioModeInputPullFilter, 1);
-  GPIO_PinModeSet(BSP_GPIO_PB1_PORT, BSP_GPIO_PB1_PIN, gpioModeInputPullFilter, 1);
-
-  // Configure LED0 and LED1 as output
-  GPIO_PinModeSet(BSP_GPIO_LED0_PORT, BSP_GPIO_LED0_PIN, gpioModePushPull, 0);
-  GPIO_PinModeSet(BSP_GPIO_LED1_PORT, BSP_GPIO_LED1_PIN, gpioModePushPull, 0);
-
-  // Enable IRQ for even numbered GPIO pins
-  NVIC_EnableIRQ(GPIO_EVEN_IRQn);
-
-  // Enable IRQ for odd numbered GPIO pins
-  NVIC_EnableIRQ(GPIO_ODD_IRQn);
-
-  // Enable falling-edge interrupts for PB pins
-  GPIO_ExtIntConfig(BSP_GPIO_PB0_PORT, BSP_GPIO_PB0_PIN, BSP_GPIO_PB0_PIN, 0, 1, true);
-  GPIO_ExtIntConfig(BSP_GPIO_PB1_PORT, BSP_GPIO_PB1_PIN, BSP_GPIO_PB1_PIN, 0, 1, true);
-}
-
-////////////////////////////////////////////////////////////////////////
-/// Hàm toggle LED
-////////////////////////////////////////////////////////////////////////
-void GPIO_EVEN_IRQHandler(void)
-{
-  GPIO_IntClear(0x5555);
-  GPIO_PinOutToggle(BSP_GPIO_LED0_PORT, BSP_GPIO_LED0_PIN);
-}
-
-void GPIO_ODD_IRQHandler(void)
-{
-  GPIO_IntClear(0xAAAA);
-  GPIO_PinOutToggle(BSP_GPIO_LED1_PORT, BSP_GPIO_LED1_PIN);
-  flag=1;
-}
-/////////////////////////////////////////////////////////////////////////
 
 
 CustomAdv_t sData; // Our custom advertising data stored here
@@ -114,29 +59,21 @@ static app_timer_t update_timer;
 // The advertising set handle allocated from Bluetooth stack.
 static uint8_t advertising_set_handle = 0xff;
 DHT_DataTypedef DHT11_Data;
-uint32_t temperature, humidity;
+extern uint32_t Temperature, Humidity;
 uint32_t Student_ID = 0x21207130; // Student ID
 
 /**************************************************************************//**
  * Application Init.
  *****************************************************************************/
-
-///////////////////////get value /////////////////////
-void set_temper_humi(uint32_t Temperature, uint32_t Humidity)
-{
-    temperature = Temperature;
-    humidity = Humidity;
-}
 ////////////////////////////////////////////////////////
 static void update_timer_cb(app_timer_t *timer, void *data)
 {
   (void)data;
   (void)timer;
-  uint8_t led0_state = temperature;
-  uint8_t led1_state = humidity;
-  if(humidity>=75&& flag==0){GPIO_PinOutSet(BSP_GPIO_LED1_PORT, BSP_GPIO_LED1_PIN);}
-  update_adv_data(&sData, advertising_set_handle,led0_state,led1_state);
-
+  //uint8_t led0_state = temperature;
+  //uint8_t led1_state = humidity;
+  //if(humidity>=75&& flag==0){GPIO_PinOutSet(BSP_GPIO_LED1_PORT, BSP_GPIO_LED1_PIN);}
+  update_adv_data(&sData, advertising_set_handle, (uint8_t) Temperature, (uint8_t) Humidity);
 }
 
 
@@ -144,7 +81,7 @@ static void update_timer_cb(app_timer_t *timer, void *data)
 SL_WEAK void app_init(void)
 {
   sl_status_t sc;
-  initLED_BUTTON();
+  //initLED_BUTTON();
 
   sc = app_timer_start(&update_timer,
                        2*1000,              //ms
@@ -179,8 +116,8 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
   bd_addr address;
   uint8_t address_type;
   uint8_t system_id[8];
-  uint16_t led0_state = GPIO_PinOutGet(BSP_GPIO_LED0_PORT, BSP_GPIO_LED0_PIN);
-  uint16_t led1_state = GPIO_PinOutGet(BSP_GPIO_LED1_PORT, BSP_GPIO_LED1_PIN);
+  //uint16_t led0_state = GPIO_PinOutGet(BSP_GPIO_LED0_PORT, BSP_GPIO_LED0_PIN);
+  //uint16_t led1_state = GPIO_PinOutGet(BSP_GPIO_LED1_PORT, BSP_GPIO_LED1_PIN);
 
   switch (SL_BT_MSG_ID(evt->header)) {
     // -------------------------------
@@ -231,7 +168,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
 
 
       // Add data to Adv packet
-      fill_adv_packet(&sData, FLAG, COMPANY_ID, led0_state,led1_state, "DANGDATCHIHOANG");
+      fill_adv_packet(&sData, FLAG, COMPANY_ID, 0, 0, "DANGDATCHIHOANG");
       app_log("fill_adv_packet completed\r\n");
 
       // Start advertise

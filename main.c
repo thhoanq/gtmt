@@ -34,6 +34,8 @@
 #include <DHT.h>
 #include "app_log.h"
 
+uint32_t Temperature, Humidity;
+
 int main(void)
 {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
@@ -47,7 +49,6 @@ int main(void)
   memlcd_app_init();
   app_log_info("Test\n");
   DHT_DataTypedef DHT11_Data;
-  uint32_t Temperature, Humidity;
 
   CMU_ClockEnable(cmuClock_GPIO, true);
 
@@ -55,6 +56,7 @@ int main(void)
 //  DHT_Name DHT11;
 //  DHT_Init(&DHT11, gpioPortB, 0);
 
+    char buffer_disp[20];
 
 #if defined(SL_CATALOG_KERNEL_PRESENT)
   // Start the kernel. Task(s) created in app_init() will start running.
@@ -68,23 +70,19 @@ int main(void)
     // Application process.
     app_process_action();
 
-    const char *title = "Nhom DDCH";
-    char buffer_temper[16];
-    char buffer_humi[16];
-
     DHT_GetData(&DHT11_Data);
     Temperature = DHT11_Data.Temperature;
     Humidity = DHT11_Data.Humidity;
-    set_temper_humi(Temperature, Humidity);
-        app_log_info("Nhom DDCH\r\n");
-        app_log_info("Temp: %d\r\n", DHT11_Data.Temperature);
-        app_log_info("Humd: %d\r\n", DHT11_Data.Humidity);
-    sl_sleeptimer_delay_millisecond(1000); //1s
-    snprintf(buffer_temper, sizeof(buffer_temper), "Nhiet do: %d",Temperature );
-    snprintf(buffer_humi, sizeof(buffer_humi), "Do am: %d", Humidity);
 
-    memlcd_display_temperature(buffer_temper);
-    memlcd_display_humidity(buffer_humi);
+        app_log_info("Nhom DDCH\r\n");
+        app_log_info("Temp: %d\r\n", Temperature);
+        app_log_info("Humd: %d\r\n", Humidity);
+    sl_sleeptimer_delay_millisecond(1000); //1s
+    snprintf(buffer_disp, sizeof(buffer_disp), "Nhiet do: %d",Temperature );
+    memlcd_display(2, buffer_disp);
+    snprintf(buffer_disp, sizeof(buffer_disp), "Do am: %d", Humidity);
+    memlcd_display(3, buffer_disp);
+
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
     // Let the CPU go to sleep if the system allows it.
     sl_power_manager_sleep();

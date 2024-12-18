@@ -1,14 +1,15 @@
 
 
 /************** MAKE CHANGES HERE ********************/
-#include <DHT.h>
+
+#include "DHT.h"
 
 #define TYPE_DHT11    // define according to your sensor
 //#define TYPE_DHT22
 
 
-#define DHT_PORT gpioPortB
-#define DHT_PIN 0
+#define DHT_PORT gpioPortD
+#define DHT_PIN 3
 
 
 
@@ -18,7 +19,6 @@
 uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
 uint16_t SUM; uint8_t Presence = 0;
 
-#include "DHT.h"
 
 // uint32_t DWT_Delay_Init(void)
 // {

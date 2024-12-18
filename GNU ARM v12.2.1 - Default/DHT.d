@@ -1,6 +1,6 @@
 DHT.o: ../DHT.c \
  c:\users\thh\downloads\simplicity_sdk_5\platform\common\toolchain\inc\sl_gcc_preinclude.h \
- C:\Users\thh\SimplicityStudio\v5_workspace\bt_soc_6/DHT.h \
+ ../DHT.h \
  c:\users\thh\downloads\simplicity_sdk_5\platform\service\udelay\inc\sl_udelay.h \
  c:\users\thh\downloads\simplicity_sdk_5\platform\service\sleeptimer\inc\sl_sleeptimer.h \
  c:\users\thh\downloads\simplicity_sdk_5\platform\common\inc\sl_status.h \
@@ -66,10 +66,9 @@ DHT.o: ../DHT.c \
  c:\users\thh\downloads\simplicity_sdk_5\platform\emlib\inc\em_gpio.h \
  c:\users\thh\downloads\simplicity_sdk_5\platform\common\inc\sl_enum.h \
  c:\users\thh\downloads\simplicity_sdk_5\platform\emlib\inc\sli_em_cmu.h \
- c:\users\thh\downloads\simplicity_sdk_5\platform\emlib\inc\em_gpio.h \
- ../DHT.h
+ c:\users\thh\downloads\simplicity_sdk_5\platform\emlib\inc\em_gpio.h
 c:\users\thh\downloads\simplicity_sdk_5\platform\common\toolchain\inc\sl_gcc_preinclude.h:
-C:\Users\thh\SimplicityStudio\v5_workspace\bt_soc_6/DHT.h:
+../DHT.h:
 c:\users\thh\downloads\simplicity_sdk_5\platform\service\udelay\inc\sl_udelay.h:
 c:\users\thh\downloads\simplicity_sdk_5\platform\service\sleeptimer\inc\sl_sleeptimer.h:
 c:\users\thh\downloads\simplicity_sdk_5\platform\common\inc\sl_status.h:
@@ -136,4 +135,3 @@ c:\users\thh\downloads\simplicity_sdk_5\platform\emlib\inc\em_gpio.h:
 c:\users\thh\downloads\simplicity_sdk_5\platform\common\inc\sl_enum.h:
 c:\users\thh\downloads\simplicity_sdk_5\platform\emlib\inc\sli_em_cmu.h:
 c:\users\thh\downloads\simplicity_sdk_5\platform\emlib\inc\em_gpio.h:
-../DHT.h:
